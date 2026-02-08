@@ -17,7 +17,7 @@ Este projeto é um **Sensor de Combustível Virtual** desenvolvido para suprir a
 
 ## 📱 Como Visualizar o Protótipo
 Você pode acessar a versão funcional hospedada no GitHub através do link abaixo:
-> **[INSIRA O LINK DO SEU REPLIT AQUI](https://esouza15.github.io/Tanque-Virtual/)**
+> **[Veja o App](https://esouza15.github.io/Tanque-Virtual/)**
 
 ### Como Instalar no Android:
 1. Abra o link no Chrome do Android.
