@@ -1,6 +1,6 @@
 # ⛽ Tanque Virtual - Monitor de Combustível
 
-Este projeto é um **Sensor de Combustível Virtual** desenvolvido para suprir a falha física do sensor (boia) de um veículo Sedã 1.8. O app calcula o nível residual de combustível com base na distância percorrida e no consumo médio.
+Este projeto é um **Sensor de Combustível Virtual** desenvolvido para suprir a falha física do sensor (boia) de veículos movidos à combustível. O app calcula o nível residual de combustível com base na distância percorrida e no consumo médio.
 
 ## 🚀 Funcionalidades
 - **Cálculo de Decaimento:** Subtração automática de litros baseada no odômetro.
