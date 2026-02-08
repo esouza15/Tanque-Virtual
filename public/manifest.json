@@ -1,0 +1,18 @@
+{
+  "name": "Tanque Digital",
+  "short_name": "Tanque",
+  "description": "Monitor de combustível para Sedã 1.8",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#111827",
+  "theme_color": "#111827",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://img.icons8.com/3d-fluency/188/gas-station.png",
+      "sizes": "188x188",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
