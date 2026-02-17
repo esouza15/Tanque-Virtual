@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tanque Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <style>
+        .fuel-gradient { background: linear-gradient(90deg, #ef4444 0%, #facc15 25%, #22c55e 100%); }
+        body { background-color: #111827; color: white; -webkit-tap-highlight-color: transparent; }
+        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="font-sans min-h-screen flex flex-col items-center p-4">
+
+    <header class="w-full max-w-md py-4 text-center">
+        <h1 class="text-xl font-bold text-gray-500 uppercase tracking-widest">Meu Tanque Digital <span class="text-[10px] bg-gray-700 px-2 py-1 rounded text-gray-300">MODO LOCAL</span></h1>
+    </header>
+
+    <main class="w-full max-w-md bg-gray-800 rounded-[2.5rem] shadow-2xl p-6 border border-gray-700">
+        <div class="text-center mb-6">
+            <div id="litros-display" class="text-7xl font-black text-green-400 transition-colors duration-500">0.0</div>
+            <div class="text-gray-500 uppercase text-xs font-bold tracking-widest mt-1">Litros no Tanque</div>
+        </div>
+
+        <div class="relative w-full h-10 bg-gray-900 rounded-2xl overflow-hidden mb-8 border-2 border-gray-700">
+            <div id="fuel-bar" class="h-full fuel-gradient transition-all duration-1000" style="width: 0%"></div>
+            <div class="absolute left-1/4 top-0 bottom-0 w-0.5 bg-white/20"></div>
+            <div class="absolute left-1/2 top-0 bottom-0 w-0.5 bg-white/20"></div>
+        </div>
+
+        <div class="text-center mb-8 bg-black/30 p-4 rounded-2xl border border-gray-700/50">
+            <div class="text-gray-500 uppercase text-[10px] font-bold tracking-tighter mb-1">Último Registro</div>
+            <div class="text-3xl font-mono text-blue-400 font-bold"><span id="km-atual-texto">0</span> <span class="text-base text-blue-700">KM</span></div>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <label class="block text-gray-400 text-sm mb-3 text-center">Atualizar KM Atual:</label>
+                <div class="flex items-center justify-between gap-3">
+                    <button onclick="ajustarKm(-1)" class="bg-gray-700 active:bg-gray-600 w-16 h-16 rounded-2xl text-3xl font-bold shadow-lg border-b-4 border-gray-900 flex items-center justify-center">－</button>
+                    <input type="number" id="km-input" class="w-full bg-gray-900 border border-gray-600 rounded-2xl p-4 text-2xl text-center outline-none font-mono" placeholder="000000">
+                    <button onclick="ajustarKm(1)" class="bg-gray-700 active:bg-gray-600 w-16 h-16 rounded-2xl text-3xl font-bold shadow-lg border-b-4 border-gray-900 flex items-center justify-center">＋</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-gray-400 text-xs mb-2 font-bold uppercase">Abasteceu (L)?</label>
+                    <input type="number" id="litros-add" class="w-full bg-gray-900 border border-gray-600 rounded-2xl p-4 text-xl outline-none" placeholder="0">
+                </div>
+                <div>
+                    <label class="block text-gray-400 text-xs mb-2 font-bold uppercase">Tipo</label>
+                    <select id="tipo-combustivel" class="w-full bg-gray-900 border border-gray-600 rounded-2xl p-4 text-lg outline-none appearance-none">
+                        <option value="etanol" selected>Etanol</option>
+                        <option value="gasolina">Gasolina</option>
+                    </select>
+                </div>
+            </div>
+
+            <button onclick="atualizarDados()" id="btn-salvar" class="w-full bg-green-600 active:scale-[0.98] transition-all text-white font-black py-5 rounded-[1.5rem] text-xl shadow-xl border-b-8 border-green-800 uppercase tracking-widest mt-4">
+                Salvar Alterações
+            </button>
+        </div>
+    </main>
+
+    <script>
+        // LÓGICA DE PERSISTÊNCIA LOCAL
+        let appData = JSON.parse(localStorage.getItem('tanque_dados')) || { litros: 0, km: 0 };
+
+        function ajustarKm(valor) {
+            const input = document.getElementById('km-input');
+            let valorInput = parseInt(input.value) || 0;
+            if (valor < 0 && valorInput <= appData.km) return;
+            input.value = valorInput + valor;
+        }
+
+        function atualizarTela() {
+            const porcentagem = (appData.litros / 54) * 100;
+            document.getElementById('litros-display').innerText = appData.litros.toFixed(1);
+            document.getElementById('fuel-bar').style.width = `${Math.min(100, porcentagem)}%`;
+            document.getElementById('km-atual-texto').innerText = appData.km.toLocaleString('pt-BR');
+            document.getElementById('km-input').value = appData.km;
+            const display = document.getElementById('litros-display');
+            display.classList.toggle('text-red-500', appData.litros < 6.75);
+            display.classList.toggle('text-green-400', appData.litros >= 6.75);
+        }
+
+        function atualizarDados() {
+            const novaKm = parseFloat(document.getElementById('km-input').value);
+            const novosLitros = parseFloat(document.getElementById('litros-add').value) || 0;
+            const consumo = document.getElementById('tipo-combustivel').value === 'gasolina' ? 7 : 6;
+            if (novaKm < appData.km) { alert("KM inválida."); return; }
+            appData.litros = Math.max(0, appData.litros - ((novaKm - appData.km) / consumo)) + novosLitros;
+            if (appData.litros > 54) appData.litros = 54;
+            appData.km = novaKm;
+            localStorage.setItem('tanque_dados', JSON.stringify(appData));
+            atualizarTela();
+            document.getElementById('litros-add').value = '';
+        }
+
+        atualizarTela();
+    </script>
+</body>
+</html>

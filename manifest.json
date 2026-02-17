@@ -2,7 +2,7 @@
   "name": "Tanque Digital",
   "short_name": "Tanque",
   "description": "Monitor de combustível para Sedã 1.8",
-  "start_url": "index.html";
+  "start_url": "index.html",
   "display": "standalone",
   "background_color": "#111827",
   "theme_color": "#111827",
